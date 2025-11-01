@@ -1,6 +1,10 @@
 # Vue Websockets Demo
 
-This is a demo showcasing how vue and vue-query can be integrate with WebSockets to enable live updates in real time.
+
+https://github.com/user-attachments/assets/4a79082f-6e1e-4cee-9565-85bca680c19c
+
+
+This is a simple demo showcasing how vue and vue-query can be integrated with WebSockets to enable live updates across multiple clients.
 
 It uses websockets to invalidate queries, not to fetch data. This is still being done with fetch and HTTP. This strategy makes sure only data that is actively used by the application will be fetched.
 
@@ -23,3 +27,5 @@ npm run start
 ## Links
 
 Original concept [Blog post from TkDodo](https://tkdodo.eu/blog/using-web-sockets-with-react-query)
+
+[Tanstack Query]([https://tanstack.com](https://tanstack.com/query/latest))
