@@ -51,9 +51,9 @@ const { data, isLoading, error, refetch } = useQuery<
   { result: Sensor[] },
   Error
 >({
-  queryKey: ["sensors"],
+  queryKey: ["sensors", "list"],
   queryFn: async () => {
-    const response = await fetch(`/sensors`)
+    const response = await fetch(`/sensors/list`)
     if (!response.ok) {
       throw new Error("Failed to fetch sensors")
     }

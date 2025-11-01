@@ -24,8 +24,21 @@ type Sensor = {
 
 const sensors = new Map<string, Sensor>()
 
+function broadcastSensorUpdate(sensorId: string) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === 1) {
+      // WebSocket.OPEN
+      client.send(
+        JSON.stringify({
+          entity: ["sensors", "details", sensorId],
+        })
+      )
+    }
+  })
+}
+
 // Initialize some dummy sensors
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 20; i++) {
   const sensor: Sensor = {
     id: `sensor-${i}`,
     name: `Sensor ${i}`,
@@ -42,17 +55,7 @@ for (let i = 1; i <= 5; i++) {
       1
     )
 
-    // Broadcast update to all connected clients
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        // WebSocket.OPEN
-        client.send(
-          JSON.stringify({
-            entity: ["sensors", sensor.id],
-          })
-        )
-      }
-    })
+    broadcastSensorUpdate(sensor.id)
   }, 1000 + i * 500)
 }
 
@@ -79,13 +82,13 @@ app.get("/", (req, res) => {
   res.sendFile("dist/index.html")
 })
 
-app.get("/sensors", (req, res) => {
-  console.log("Fetching all sensors")
-  const sensorsArray = Array.from(sensors.values())
+app.get("/sensors/list", (req, res) => {
+  console.log("Fetching all sensors ids")
+  const sensorsArray = Array.from(sensors.values()).map(({ id }) => ({ id }))
   res.json({ result: sensorsArray })
 })
 
-app.get("/sensors/:id", (req, res) => {
+app.get("/sensors/details/:id", (req, res) => {
   console.log("Fetching sensor with ID:", req.params.id)
   const sensor = sensors.get(req.params.id)
   if (!sensor) {
@@ -93,6 +96,30 @@ app.get("/sensors/:id", (req, res) => {
   }
 
   res.json(sensor)
+})
+
+app.put("/sensors/details/:id", (req, res) => {
+  console.log("[PUT]Updating sensor with ID:", req.params.id)
+
+  const { name } = req.body
+  if (!name) {
+    console.error("Name is required")
+    res.status(400).json({ error: "Name is required" })
+    return
+  }
+
+  const sensor = sensors.get(req.params.id)
+  if (!sensor) {
+    console.error("Sensor not found")
+    res.status(404).json({ error: "Sensor not found" })
+    return
+  }
+
+  sensor.name = name
+
+  broadcastSensorUpdate(sensor.id)
+
+  return res.status(200).json(sensor)
 })
 
 server.listen(3000, () => {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query"
+import { ref, watch } from "vue"
 
 interface Sensor {
   id: string
@@ -12,27 +13,81 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const queryClient = useQueryClient()
 
 const {
   data: sensor,
   isLoading,
   error,
 } = useQuery<Sensor, Error>({
-  queryKey: ["sensors", props.sensorId] as const,
+  queryKey: ["sensors", "details", props.sensorId] as const,
   queryFn: async () => {
-    const response = await fetch(`/sensors/${props.sensorId}`)
+    const response = await fetch(`/sensors/details/${props.sensorId}`)
     if (!response.ok) {
       throw new Error("Failed to fetch sensor")
     }
     return response.json()
   },
 })
+
+const sensorName = ref<string>("")
+
+// Watch for sensor changes and update if needed (but not on blur)
+watch(
+  () => sensor.value?.name,
+  (newName) => {
+    if (newName && sensorName.value !== newName) {
+      sensorName.value = newName
+    }
+  },
+  { immediate: true }
+)
+
+const { mutate: updateSensorName, isPending: isUpdating } = useMutation<
+  Sensor,
+  Error,
+  string
+>({
+  mutationFn: async (newName: string) => {
+    const response = await fetch(`/sensors/details/${props.sensorId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: newName }),
+    })
+    if (!response.ok) {
+      throw new Error("Failed to update sensor")
+    }
+    return response.json()
+  },
+  onSuccess: (updatedSensor) => {
+    queryClient.setQueryData(
+      ["sensors", "details", props.sensorId],
+      updatedSensor
+    )
+  },
+})
+
+const handleNameChange = () => {
+  if (sensorName.value && sensorName.value !== sensor.value?.name) {
+    updateSensorName(sensorName.value)
+  }
+}
 </script>
 
 <template>
   <tr class="sensor-row">
     <td>{{ sensor?.id }}</td>
-    <td>{{ sensor?.name }}</td>
+    <td>
+      <input
+        v-model="sensorName"
+        @blur="handleNameChange"
+        @keyup.enter="handleNameChange"
+        :disabled="isUpdating"
+        placeholder="Enter sensor name"
+      />
+    </td>
     <td class="value-cell">
       <span v-if="isLoading" class="loading">Loading...</span>
       <span v-else-if="error" class="error">Failed to load</span>
@@ -74,6 +129,29 @@ const {
 .sensor-row td:nth-child(2) {
   font-weight: 500;
   color: #333;
+  padding: 8px;
+}
+
+.sensor-row input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sensor-row input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.sensor-row input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .value-cell {
