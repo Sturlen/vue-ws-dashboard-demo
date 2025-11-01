@@ -19,8 +19,10 @@ wss.on("connection", (ws) => {
   })
 })
 
+app.use(express.static("dist"))
+
 app.get("/", (req, res) => {
-  res.send("Hello from Express!")
+  res.sendFile("dist/index.html")
 })
 
 server.listen(3000, () => {
