@@ -20,9 +20,7 @@ const {
 } = useQuery<Sensor, Error>({
   queryKey: ["sensors", props.sensorId] as const,
   queryFn: async () => {
-    const response = await fetch(
-      `http://localhost:3000/sensors/${props.sensorId}`
-    )
+    const response = await fetch(`/sensors/${props.sensorId}`)
     if (!response.ok) {
       throw new Error("Failed to fetch sensor")
     }

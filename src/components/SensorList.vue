@@ -53,7 +53,7 @@ const { data, isLoading, error, refetch } = useQuery<
 >({
   queryKey: ["sensors"],
   queryFn: async () => {
-    const response = await fetch(`http://localhost:3000/sensors`)
+    const response = await fetch(`/sensors`)
     if (!response.ok) {
       throw new Error("Failed to fetch sensors")
     }
@@ -61,7 +61,7 @@ const { data, isLoading, error, refetch } = useQuery<
   },
 })
 
-useWebSocketSubscription(`http://localhost:3000/ws`)
+useWebSocketSubscription(`/ws`)
 
 const sensorsList = computed(() => data.value?.result || [])
 </script>
