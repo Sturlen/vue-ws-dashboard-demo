@@ -2,6 +2,7 @@ import express from "express"
 import http from "http"
 import { WebSocketServer } from "ws"
 import cors from "cors"
+import { generateRandomCoordinate } from "./generateRandomCoordinate.ts"
 
 const app = express()
 const server = http.createServer(app)
@@ -10,10 +11,15 @@ const wss = new WebSocketServer({ server })
 app.use(cors())
 app.use(express.json())
 
+const center = { latitude: 58.876667, longitude: 5.637778 }
+
 type Sensor = {
   id: string
   name: string
-  value: number
+  value: {
+    longitude: number
+    latitude: number
+  }
 }
 
 const sensors = new Map<string, Sensor>()
@@ -23,14 +29,18 @@ for (let i = 1; i <= 5; i++) {
   const sensor: Sensor = {
     id: `sensor-${i}`,
     name: `Sensor ${i}`,
-    value: Math.random() * 100,
+    value: generateRandomCoordinate(center.latitude, center.longitude, 1),
   }
   sensors.set(sensor.id, sensor)
 
   // update sensor values
   setInterval(() => {
     console.log("Updating value for", sensor.id)
-    sensor.value = Math.random() * 100
+    sensor.value = generateRandomCoordinate(
+      center.latitude,
+      center.longitude,
+      1
+    )
 
     // Broadcast update to all connected clients
     wss.clients.forEach((client) => {

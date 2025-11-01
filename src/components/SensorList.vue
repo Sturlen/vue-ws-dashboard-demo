@@ -44,7 +44,7 @@ import { useWebSocketSubscription } from "../composables/useWebSocketSubscriptio
 interface Sensor {
   id: string
   name: string
-  value: number
+  value: { latitude: number; longitude: number }
 }
 
 const { data, isLoading, error, refetch } = useQuery<

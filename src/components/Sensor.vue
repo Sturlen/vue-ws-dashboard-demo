@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/vue-query"
 interface Sensor {
   id: string
   name: string
-  value: number
+  value: { latitude: number; longitude: number }
 }
 
 interface Props {
@@ -38,7 +38,10 @@ const {
     <td class="value-cell">
       <span v-if="isLoading" class="loading">Loading...</span>
       <span v-else-if="error" class="error">Failed to load</span>
-      <span v-else class="sensor-value">{{ sensor?.value }}</span>
+      <span v-else class="sensor-value">
+        {{ sensor?.value?.latitude?.toFixed(6) }},
+        {{ sensor?.value?.longitude?.toFixed(6) }}
+      </span>
     </td>
   </tr>
 </template>
