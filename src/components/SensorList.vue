@@ -72,7 +72,7 @@ const sensorsList = computed(() => data.value?.result || [])
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
-  max-width: 900px;
+  max-width: 80rem;
   margin: 20px auto;
 }
 
@@ -134,6 +134,7 @@ button:disabled {
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
+  table-layout: fixed;
 }
 
 .sensors-table thead {
@@ -149,6 +150,10 @@ button:disabled {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
+  width: 33.333%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .sensors-table tbody tr {
@@ -163,6 +168,10 @@ button:disabled {
 .sensors-table td {
   padding: 12px;
   color: #555;
+  width: 33.333%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .value-cell {
@@ -172,5 +181,122 @@ button:disabled {
 
 .sensors-table tbody tr:last-child {
   border-bottom: none;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
+  .sensor-list-container {
+    max-width: 100%;
+    margin: 15px;
+    padding: 15px;
+  }
+
+  .sensors-table th,
+  .sensors-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sensor-list-container {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .controls {
+    margin-bottom: 15px;
+  }
+
+  button {
+    padding: 6px 12px;
+    font-size: 12px;
+    width: 100%;
+  }
+
+  .sensors-table {
+    font-size: 12px;
+  }
+
+  .sensors-table th {
+    padding: 8px;
+    font-size: 10px;
+  }
+
+  .sensors-table td {
+    padding: 8px;
+  }
+
+  .sensors-table th,
+  .sensors-table td {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 480px) {
+  .sensor-list-container {
+    margin: 5px;
+    padding: 8px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .controls {
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .sensors-table {
+    font-size: 11px;
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .sensors-table thead {
+    display: none;
+  }
+
+  .sensors-table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+  }
+
+  .sensors-table td {
+    display: block;
+    padding: 6px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+  }
+
+  .sensors-table td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .sensors-table tbody tr:last-child td {
+    border-bottom: none;
+  }
 }
 </style>

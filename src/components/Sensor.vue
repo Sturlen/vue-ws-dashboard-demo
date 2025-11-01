@@ -46,39 +46,58 @@ const {
 <style scoped>
 .sensor-row {
   border-bottom: 1px solid #eee;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .sensor-row:hover {
-  background-color: #f9f9f9;
+  background-color: #f0f7ff;
 }
 
 .sensor-row td {
   padding: 12px;
   color: #555;
+  text-align: left;
+  width: 33.333%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  vertical-align: middle;
 }
 
-.sensor-row td:last-child {
-  border: none;
+.sensor-row td:first-child {
+  color: #666;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.sensor-row td:nth-child(2) {
+  font-weight: 500;
+  color: #333;
 }
 
 .value-cell {
-  font-weight: 500;
+  font-weight: 600;
   color: #007bff;
+  font-size: 15px;
+  text-align: center;
 }
 
 .loading {
-  color: #004085;
+  color: #0056b3;
   font-style: italic;
+  font-size: 12px;
 }
 
 .error {
   color: #721c24;
   font-style: italic;
+  font-size: 12px;
 }
 
 .sensor-value {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
+  color: #0056b3;
+  letter-spacing: 0.5px;
 }
 </style>
