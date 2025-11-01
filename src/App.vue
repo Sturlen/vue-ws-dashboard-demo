@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue"
 import SensorList from "./components/SensorList.vue"
-import WebSockets from "./components/web-sockets.vue"
 import { VueQueryDevtools } from "@tanstack/vue-query-devtools"
 </script>
 
@@ -15,8 +13,6 @@ import { VueQueryDevtools } from "@tanstack/vue-query-devtools"
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
-  <WebSockets />
   <SensorList />
 </template>
 

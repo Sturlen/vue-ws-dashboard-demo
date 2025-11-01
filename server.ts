@@ -26,6 +26,24 @@ for (let i = 1; i <= 5; i++) {
     value: Math.random() * 100,
   }
   sensors.set(sensor.id, sensor)
+
+  // update sensor values
+  setInterval(() => {
+    console.log("Updating value for", sensor.id)
+    sensor.value = Math.random() * 100
+
+    // Broadcast update to all connected clients
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        // WebSocket.OPEN
+        client.send(
+          JSON.stringify({
+            entity: ["sensors", sensor.id],
+          })
+        )
+      }
+    })
+  }, 1000 + i * 500)
 }
 
 wss.on("connection", (ws) => {
@@ -35,6 +53,10 @@ wss.on("connection", (ws) => {
     console.log(`Received: ${message}`)
     ws.send(`Echo: ${message}`) // Send a message back to the client
   })
+
+  ws.send(
+    JSON.stringify({ entity: ["sensors"] }) // invalidate all sensors on connect
+  )
 
   ws.on("close", () => {
     console.log("Client disconnected")

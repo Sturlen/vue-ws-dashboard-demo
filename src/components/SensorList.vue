@@ -14,13 +14,22 @@
       <p>Failed to load sensors: {{ error }}</p>
     </div>
 
-    <div v-else-if="sensorsList.length > 0" class="sensors-grid">
-      <div v-for="sensor in sensorsList" :key="sensor.id" class="sensor-card">
-        <div class="sensor-name">{{ sensor.name }}</div>
-        <div class="sensor-value">{{ sensor.value }}</div>
-        <div class="sensor-id">ID: {{ sensor.id }}</div>
-      </div>
-    </div>
+    <table v-else-if="sensorsList.length > 0" class="sensors-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <Sensor
+          v-for="sensor in sensorsList"
+          :key="sensor.id"
+          :sensor-id="sensor.id"
+        />
+      </tbody>
+    </table>
 
     <div v-else class="no-data">No sensors available</div>
   </div>
@@ -29,6 +38,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { useQuery } from "@tanstack/vue-query"
+import Sensor from "./Sensor.vue"
+import { useWebSocketSubscription } from "../composables/useWebSocketSubscription"
 
 interface Sensor {
   id: string
@@ -48,8 +59,9 @@ const { data, isLoading, error, refetch } = useQuery<
     }
     return response.json()
   },
-  refetchInterval: 5000, // Refetch every 5 seconds
 })
+
+useWebSocketSubscription(`http://localhost:3000/ws`)
 
 const sensorsList = computed(() => data.value?.result || [])
 </script>
@@ -115,42 +127,50 @@ button:disabled {
   color: #856404;
 }
 
-.sensors-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 15px;
-}
-
-.sensor-card {
+.sensors-table {
+  width: 100%;
+  border-collapse: collapse;
   background-color: white;
-  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
 }
 
-.sensor-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.sensors-table thead {
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ddd;
 }
 
-.sensor-name {
-  font-size: 16px;
-  font-weight: bold;
+.sensors-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 8px;
-}
-
-.sensor-value {
-  font-size: 28px;
-  font-weight: bold;
-  color: #007bff;
-  margin-bottom: 8px;
-}
-
-.sensor-id {
+  text-transform: uppercase;
   font-size: 12px;
-  color: #666;
+  letter-spacing: 0.5px;
+}
+
+.sensors-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.sensors-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.sensors-table td {
+  padding: 12px;
+  color: #555;
+}
+
+.value-cell {
+  font-weight: 500;
+  color: #007bff;
+}
+
+.sensors-table tbody tr:last-child {
+  border-bottom: none;
 }
 </style>
