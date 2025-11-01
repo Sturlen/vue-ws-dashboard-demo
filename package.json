@@ -1,0 +1,32 @@
+{
+  "name": "vue-ws-dashboard-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"node --experimental-strip-types server.ts\"",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.5",
+    "@types/ws": "^8.18.1",
+    "concurrently": "^9.2.1",
+    "express": "^5.1.0",
+    "vue": "^3.5.22",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "typescript": "~5.9.3",
+    "vite": "npm:rolldown-vite@7.1.14",
+    "vue-tsc": "^3.1.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@7.1.14"
+    }
+  }
+}
