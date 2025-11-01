@@ -1,8 +1,12 @@
 # Vue Websockets Demo
 
-
 https://github.com/user-attachments/assets/4a79082f-6e1e-4cee-9565-85bca680c19c
 
+## Demo
+
+[Live demo hosted on Railway.app](https://vue-ws.up.railway.app)
+
+## Info
 
 This is a simple demo showcasing how vue and vue-query can be integrated with WebSockets to enable live updates across multiple clients.
 
