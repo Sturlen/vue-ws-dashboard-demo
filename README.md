@@ -1,5 +1,25 @@
-# Vue 3 + TypeScript + Vite
+# Vue Websockets Demo
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is a demo showcasing how vue and vue-query can be integrate with WebSockets to enable live updates in real time.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+It uses websockets to invalidate queries, not to fetch data. This is still being done with fetch and HTTP. This strategy makes sure only data that is actively used by the application will be fetched.
+
+Could be expaned to use Tanstack DB and ElectricSQL to directly connect to a Postgres Database, or socket.io for pub/sub only for the data the app is interested in.
+
+## Commands
+
+Build the vue frontend.
+
+```sh
+npm run build
+```
+
+Start the backend and host files. uses "strip ts types" so it does not need a complile step.
+
+```sh
+npm run start
+```
+
+## Links
+
+Original concept [Blog post from TkDodo](https://tkdodo.eu/blog/using-web-sockets-with-react-query)
