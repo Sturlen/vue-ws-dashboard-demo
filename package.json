@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"vite\" \"node --experimental-strip-types server.ts\"",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node --experimental-strip-types server.ts"
   },
   "dependencies": {
     "@tanstack/vue-query": "^5.90.5",
